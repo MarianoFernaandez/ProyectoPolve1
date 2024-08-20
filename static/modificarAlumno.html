@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Alumno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Modificar Alumno</h1>
+
+    <form id="modificarAlumnoForm">
+        <label for="apyn">Nombre:</label>
+        <input type="text" id="apyn" name="apyn" required>
+        
+        <label for="idcurso">Curso:</label>
+        <select id="idcurso" name="idcurso" required></select>
+        
+        <label for="fecnac">Fecha de Nacimiento:</label>
+        <input type="date" id="fecnac" name="fecnac" required>
+        
+        <input type="hidden" id="idalumno" name="idalumno">
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <script>
+        async function fetchCursos() {
+            const response = await fetch('http://127.0.0.1:8000/cursos/');
+            const cursos = await response.json();
+            const dropdown = document.getElementById('idcurso');
+
+            dropdown.innerHTML = ''; // Limpiar opciones existentes
+
+            cursos.forEach(curso => {
+                const option = document.createElement('option');
+                option.value = curso.idcurso;
+                option.text = curso.curso;
+                dropdown.add(option);
+            });
+        }
+
+        async function actualizarAlumno(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('idalumno').value;
+            const apyn = document.getElementById('apyn').value;
+            const idcurso = document.getElementById('idcurso').value;
+            const fecnac = document.getElementById('fecnac').value;
+
+            const response = await fetch(`http://127.0.0.1:8000/alumnos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ apyn, idcurso, fecnac })
+            });
+
+            if (response.ok) {
+                alert('Alumno actualizado exitosamente');
+                window.location.href = 'index.html'; // Redirigir a la página principal
+            } else {
+                alert('Error al actualizar el alumno');
+            }
+        }
+
+        function obtenerIdDesdeURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const id = obtenerIdDesdeURL();
+            if (id) {
+                document.getElementById('idalumno').value = id;
+                document.getElementById('modificarAlumnoForm').addEventListener('submit', actualizarAlumno);
+                await fetchCursos(); // Cargar los cursos en el dropdown
+            }
+        });
+    </script>
+</body>
+</html>
+

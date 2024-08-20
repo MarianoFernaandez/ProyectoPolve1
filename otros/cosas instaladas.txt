@@ -1,0 +1,11 @@
+'''
+instalado:
+FastAPI (completo, incluido jinja2 y uvicorn)
+sql server management estudio 20
+sql server (evaluation version)
+python 3.12.4 (64-bit)
+pyodbc
+SQLAlchemy
+Microsoft ODBC Driver 18 for SQL Server (x64) version 18.3.3.1
+Microsoft Visual C++ Redistributable (version 14.40.33810.0)
+'''

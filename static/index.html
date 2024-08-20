@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Alumnos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            text-align: center;
+            padding: 12px;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        td {
+            background-color: #fff;
+        }
+        td button {
+            background-color: #f44336;
+            margin-left: 5px;
+        }
+        td button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta Alumnos</h1>
+
+    <!-- Botones para alta de cursos y alumnos -->
+    <button onclick="irAltaCursos()">Alta Cursos</button>
+    <button onclick="irAltaAlumnos()">Alta Alumnos</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Curso</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="alumnosTableBody">
+            <!-- Aquí se llenarán las filas con datos de los alumnos -->
+        </tbody>
+    </table>
+
+    <script>
+        function formatFecha(fecha) {
+            const [anio, mes, dia] = fecha.split('-');
+            return `${dia}/${mes}/${anio}`;
+        }
+
+        async function fetchAlumnos() {
+            const response = await fetch('http://127.0.0.1:8000/alumnos/');
+            const alumnos = await response.json();
+
+            const tableBody = document.getElementById('alumnosTableBody');
+            tableBody.innerHTML = '';
+
+            alumnos.forEach(alumno => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${alumno.idalumno}</td>
+                    <td>${alumno.apyn}</td>
+                    <td>${alumno.curso}</td>
+                    <td>${formatFecha(alumno.fecnac)}</td>
+                    <td>
+                        <button onclick="modificarAlumno(${alumno.idalumno})">Modificar</button>
+                        <button onclick="borrarAlumno(${alumno.idalumno})">Borrar</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function modificarAlumno(id) {
+            window.location.href = `modificarAlumno.html?id=${id}`;
+        }
+
+        function borrarAlumno(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar el alumno con ID ' + id + '?')) {
+                fetch(`http://127.0.0.1:8000/alumnos/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        fetchAlumnos();
+                    } else {
+                        alert('Error al eliminar el alumno');
+                    }
+                });
+            }
+        }
+
+        function irAltaCursos() {
+            window.location.href = 'altaCursos.html';
+        }
+
+        function irAltaAlumnos() {
+            window.location.href = 'altaAlumnos.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchAlumnos);
+    </script>
+</body>
+</html>
+
