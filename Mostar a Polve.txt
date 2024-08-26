@@ -1,0 +1,42 @@
+Mostar a Polve
+
+Id no encontrado:
+
+Método POST
+
+http://127.0.0.1:8000/alumnos/nuevo/
+
+{
+    "apyn": "alumno nuevo",
+    "idcurso": 10,
+    "fecnac": "1982-07-10"
+}
+
+lo que tiene que aparecer:
+
+{
+  "detail": "Curso con id 10 no encontrado"
+}
+
+Modificar Alumno
+
+Método PUT
+
+http://127.0.0.1:8000/alumnos/5
+
+{
+  "apyn": "Kevin Zenon",
+  "idcurso": 3,
+  "fecnac": "2003-05-15"
+}
+
+lo que tiene que aparecer
+
+{
+  "idalumno": 5,
+  "apyn": "Kevin Zenon",
+  "idcurso": 3,
+  "curso": "Biología",
+  "fecnac": "2003-05-15"
+}
+

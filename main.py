@@ -15,11 +15,13 @@ from sqlalchemy.orm import declarative_base, sessionmaker, relationship, joinedl
 from model import AlumnoModel, CursoModel  # Si es necesario
 from fastapi import HTTPException
 
-server = r'DESKTOP-9FLI8NH'
+server = r'SQLSERVER\\SQLSERVER'
 database = 'bdg1'
+username = 'bdg1'
+password = 'bdg1'
 
 connection_string = (
-    f'mssql+pyodbc://@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server'
+    f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+18+for+SQL+Server'
     '&TrustServerCertificate=yes'
 )
 
